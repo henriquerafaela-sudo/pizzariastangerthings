@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawkins Pizzaria - Stranger Things</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000814 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Efeito de partículas/estrelas */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ff073a, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ff073a, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #ff073a, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: stars 20s linear infinite;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes stars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
+        }
+
+        header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(180deg, rgba(255, 7, 58, 0.1) 0%, transparent 100%);
+            border-bottom: 3px solid #ff073a;
+            box-shadow: 0 0 30px #ff073a;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #ff073a;
+            text-shadow: 
+                0 0 10px #ff073a,
+                0 0 20px #ff073a,
+                0 0 40px #ff073a,
+                3px 3px 0 #000;
+            animation: flicker 3s infinite;
+            letter-spacing: 3px;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.6; }
+            94% { opacity: 1; }
+            96% { opacity: 0.4; }
+            97% { opacity: 1; }
+        }
+
+        .subtitle {
+            margin-top: 15px;
+            font-size: 0.7rem;
+            color: #00d9ff;
+            text-shadow: 0 0 10px #00d9ff;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: #ff073a;
+            text-shadow: 0 0 10px #ff073a;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #ff073a;
+            text-align: center;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: rgba(10, 10, 10, 0.85);
+            border: 2px solid #ff073a;
+            border-radius: 5px;
+            padding: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(255, 7, 58, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 7, 58, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .product-card:hover::before {
+            left: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px #ff073a, inset 0 0 20px rgba(255, 7, 58, 0.2);
+        }
+
+        .product-emoji {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px #ff073a);
+        }
+
+        .product-name {
+            font-size: 0.8rem;
+            color: #00d9ff;
+            text-shadow: 0 0 5px #00d9ff;
+            margin-bottom: 10px;
+            min-height: 40px;
+            line-height: 1.4;
+        }
+
+        .product-desc {
+            font-size: 0.55rem;
+            color: #aaa;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-family: Arial, sans-serif;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            color: #ff073a;
+            text-shadow: 0 0 10px #ff073a;
+            margin-bottom: 15px;
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid #ff073a;
+            color: #ff073a;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px #ff073a;
+        }
+
+        .btn-add:hover {
+            background: #ff073a;
+            color: #000;
+            box-shadow: 0 0 20px #ff073a;
+            text-shadow: none;
+        }
+
+        /* Carrinho flutuante */
+        .cart-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: #000;
+            border: 3px solid #ff073a;
+            color: #ff073a;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            box-shadow: 0 0 20px #ff073a;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-btn:hover {
+            background: #ff073a;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .cart-count {
+            background: #ff073a;
+            color: #000;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+
+        .cart-btn:hover .cart-count {
+            background: #000;
+            color: #ff073a;
+        }
+
+        /* Modal do carrinho */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .cart-modal.active {
+            display: flex;
+        }
+
+        .cart-content {
+            background: linear-gradient(135deg, #0a0a0a, #1a0033);
+            border: 3px solid #ff073a;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 25px;
+            box-shadow: 0 0 50px #ff073a;
+            position: relative;
+        }
+
+        .cart-content h2 {
+            color: #ff073a;
+            text-shadow: 0 0 10px #ff073a;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .close-cart {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: #ff073a;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .close-cart:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #ff073a;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 7, 58, 0.3);
+            font-size: 0.6rem;
+            gap: 10px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            color: #00d9ff;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #ff073a;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            background: transparent;
+            border: 1px solid #ff073a;
+            color: #ff073a;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+        }
+
+        .qty-btn:hover {
+            background: #ff073a;
+            color: #000;
+        }
+
+        .qty-display {
+            min-width: 25px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .remove-btn {
+            background: transparent;
+            border: none;
+            color: #ff073a;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        .remove-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #ff073a;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 0.7rem;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #ff073a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #ff073a;
+            text-shadow: 0 0 10px #ff073a;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 18px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #ff073a, #cc0022);
+            border: none;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            text-shadow: 0 0 10px #fff;
+            box-shadow: 0 0 20px #ff073a;
+        }
+
+        .btn-checkout:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px #ff073a;
+        }
+
+        .btn-checkout:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Scroll customizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff073a;
+            border-radius: 4px;
+        }
+
+        /* Notificação */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #000;
+            border: 2px solid #ff073a;
+            color: #ff073a;
+            padding: 15px 25px;
+            font-size: 0.65rem;
+            border-radius: 5px;
+            box-shadow: 0 0 20px #ff073a;
+            z-index: 300;
+            transition: transform 0.3s;
+            text-shadow: 0 0 5px #ff073a;
+        }
+
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+            .subtitle {
+                font-size: 0.55rem;
+            }
+            .section-title {
+                font-size: 0.9rem;
+            }
+            .cart-btn {
+                padding: 12px 15px;
+                font-size: 0.55rem;
+            }
+            .product-name {
+                font-size: 0.65rem;
+            }
+            .cart-content {
+                padding: 20px 15px;
+            }
+            .cart-item {
+                font-size: 0.55rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🍕 HAWKINS PIZZARIA 🍕</h1>
+        <p class="subtitle">// DO UPSIDE DOWN DIRETO PARA VOCÊ //</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">🍕 PIZZAS DO MUNDO INVERTIDO</h2>
+        <div class="products-grid" id="pizzasGrid"></div>
+
+        <h2 class="section-title">🥤 BEBIDAS ESTRANHAS</h2>
+        <div class="products-grid" id="drinksGrid"></div>
+    </div>
+
+    <!-- Botão do carrinho -->
+    <button class="cart-btn" onclick="toggleCart()">
+        🛒 CARRINHO <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+    <!-- Modal do carrinho -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+            <h2>🛒 SEU PEDIDO</h2>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal" style="display: none;">
+                <span>TOTAL:</span>
+                <span id="totalValue">R$ 0,00</span>
+            </div>
+            <button class="btn-checkout" id="checkoutBtn" onclick="finalizarCompra()" disabled>
+                📱 FINALIZAR NO WHATSAPP
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Produtos - Pizzas
+        const pizzas = [
+            { id: 1, name: "Pizza Demogorgon", desc: "Calabresa, cebola, pimenta e muçarela", price: 45.90, emoji: "🍕" },
+            { id: 2, name: "Pizza Eleven", desc: "Frango, catupiry, milho e azeitona", price: 49.90, emoji: "🍕" },
+            { id: 3, name: "Pizza Mind Flayer", desc: "Quatro queijos com borda recheada", price: 55.90, emoji: "🍕" },
+            { id: 4, name: "Pizza Vecna", desc: "Pepperoni, bacon, cheddar e orégano", price: 52.90, emoji: "🍕" },
+            { id: 5, name: "Pizza Hawkins", desc: "Portuguesa completa tradicional", price: 47.90, emoji: "🍕" },
+            { id: 6, name: "Pizza Upside Down", desc: "Massa preta com queijo e tomate", price: 58.90, emoji: "🍕" },
+            { id: 7, name: "Pizza Dustin", desc: "Marguerita com manjericão fresco", price: 42.90, emoji: "🍕" },
+            { id: 8, name: "Pizza Mike Wheeler", desc: "Calabresa moída com cebola", price: 44.90, emoji: "🍕" },
+            { id: 9, name: "Pizza Max Mayfield", desc: "Frango com bacon e cheddar", price: 51.90, emoji: "🍕" },
+            { id: 10, name: "Pizza Steve Harrington", desc: "Suprema com tudo que tem direito", price: 59.90, emoji: "🍕" },
+            { id: 11, name: "Pizza Nancy Wheeler", desc: "Vegetariana com legumes grelhados", price: 46.90, emoji: "🍕" },
+            { id: 12, name: "Pizza Will Byers", desc: "Napolitana com muçarela e tomate", price: 43.90, emoji: "🍕" }
+        ];
+
+        // Produtos - Bebidas
+        const drinks = [
+            { id: 101, name: "Coca-Cola 2L", desc: "Refrigerante gelado", price: 12.90, emoji: "🥤" },
+            { id: 102, name: "Guaraná Antarctica 2L", desc: "O sabor do Brasil", price: 11.90, emoji: "🥤" },
+            { id: 103, name: "Fanta Laranja 2L", desc: "Refrescante e gelada", price: 11.90, emoji: "🥤" },
+            { id: 104, name: "Sprite 2L", desc: "Limão refrescante", price: 11.90, emoji: "🥤" },
+            { id: 105, name: "Suco de Laranja 1L", desc: "Natural e gelado", price: 14.90, emoji: "🧃" },
+            { id: 106, name: "Água Mineral 500ml", desc: "Com ou sem gás", price: 4.90, emoji: "💧" },
+            { id: 107, name: "Cerveja Heineken 350ml", desc: "Long neck gelada", price: 9.90, emoji: "🍺" },
+            { id: 108, name: "Cerveja Budweiser 350ml", desc: "Long neck gelada", price: 8.90, emoji: "🍺" },
+            { id: 109, name: "Energético Monster", desc: "Lata 473ml", price: 12.90, emoji: "⚡" },
+            { id: 110, name: "Energético Red Bull", desc: "Lata 250ml", price: 11.90, emoji: "⚡" },
+            { id: 111, name: "Suco de Uva 1L", desc: "Integral e gelado", price: 15.90, emoji: "🧃" },
+            { id: 112, name: "Chá Gelado Limão 1L", desc: "Refrescante", price: 9.90, emoji: "🧊" },
+            { id: 113, name: "Milkshake Chocolate", desc: "500ml cremoso", price: 18.90, emoji: "🥛" },
+            { id: 114, name: "Milkshake Morango", desc: "500ml cremoso", price: 18.90, emoji: "🥛" },
+            { id: 115, name: "Água de Coco 1L", desc: "Natural e refrescante", price: 13.90, emoji: "🥥" }
+        ];
+
+        // Estado do carrinho
+        let cart = JSON.parse(localStorage.getItem('hawkinsCart')) || [];
+
+        // Número do WhatsApp
+        const WHATSAPP_NUMBER = "5581989717252";
+
+        // Renderizar produtos
+        function renderProducts() {
+            const pizzasGrid = document.getElementById('pizzasGrid');
+            const drinksGrid = document.getElementById('drinksGrid');
+
+            pizzasGrid.innerHTML = pizzas.map(p => `
+                <div class="product-card">
+                    <div class="product-emoji">${p.emoji}</div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-desc">${p.desc}</div>
+                    <div class="product-price">R$ ${p.price.toFixed(2).replace('.', ',')}</div>
+                    <button class="btn-add" onclick="addToCart(${p.id}, 'pizza')">+ ADICIONAR</button>
+                </div>
+            `).join('');
+
+            drinksGrid.innerHTML = drinks.map(d => `
+                <div class="product-card">
+                    <div class="product-emoji">${d.emoji}</div>
+                    <div class="product-name">${d.name}</div>
+                    <div class="product-desc">${d.desc}</div>
+                    <div class="product-price">R$ ${d.price.toFixed(2).replace('.', ',')}</div>
+                    <button class="btn-add" onclick="addToCart(${d.id}, 'drink')">+ ADICIONAR</button>
+                </div>
+            `).join('');
+        }
+
+        // Adicionar ao carrinho
+        function addToCart(id, type) {
+            const productList = type === 'pizza' ? pizzas : drinks;
+            const product = productList.find(p => p.id === id);
+
+            const existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            saveCart();
+            updateCartUI();
+            showNotification(`✓ ${product.name} adicionado!`);
+        }
+
+        // Remover do carrinho
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            saveCart();
+            updateCartUI();
+        }
+
+        // Alterar quantidade
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                removeFromCart(id);
+                return;
+            }
+
+            saveCart();
+            updateCartUI();
+        }
+
+        // Salvar carrinho
+        function saveCart() {
+            localStorage.setItem('hawkinsCart', JSON.stringify(cart));
+        }
+
+        // Atualizar UI do carrinho
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const totalValue = document.getElementById('totalValue');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCount.textContent = totalItems;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">🕳️ Seu carrinho está vazio<br><br>O Upside Down está chamando...</div>';
+                cartTotal.style.display = 'none';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.emoji} ${item.name}</div>
+                        <div class="cart-item-price">R$ ${(item.price * item.qty).toFixed(2).replace('.', ',')}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                        <span class="qty-display">${item.qty}</span>
+                        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            totalValue.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            cartTotal.style.display = 'flex';
+            checkoutBtn.disabled = false;
+        }
+
+        // Abrir/fechar carrinho
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('active');
+        }
+
+        // Notificação
+        function showNotification(msg) {
+            const notification = document.getElementById('notification');
+            notification.textContent = msg;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Finalizar compra - enviar para WhatsApp
+        function finalizarCompra() {
+            if (cart.length === 0) return;
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            let message = "🍕 *PEDIDO - HAWKINS PIZZARIA* 🍕\n";
+            message += "═══════════════════════\n\n";
+            message += "📋 *ITENS DO PEDIDO:*\n\n";
+
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.emoji} *${item.name}*\n`;
+                message += `   Qtd: ${item.qty} x R$ ${item.price.toFixed(2).replace('.', ',')}\n`;
+                message += `   Subtotal: R$ ${(item.price * item.qty).toFixed(2).replace('.', ',')}\n\n`;
+            });
+
+            message += "═══════════════════════\n";
+            message += `💰 *TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
+            message += "═══════════════════════\n\n";
+            message += "📍 *Por favor, informe seu endereço de entrega:*\n";
+            message += "👤 Nome:\n";
+            message += "🏠 Endereço:\n";
+            message += "📞 Telefone:\n";
+            message += "💳 Forma de pagamento:\n";
+            message += "📝 Observações:\n\n";
+            message += "🕳️ _Pedido vindo do Upside Down!_";
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Inicializar
+        renderProducts();
+        updateCartUI();
+
+        // Fechar modal clicando fora
+        document.getElementById('cartModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleCart();
+            }
+        });
+    </script>
+</body>
+</html>
